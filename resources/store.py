@@ -1,3 +1,4 @@
+from typing import Dict, Tuple, Union
 from flask_restful import Resource
 from flask_jwt import jwt_required
 
@@ -12,7 +13,7 @@ class ItemStore(Resource):
     """
 
     @jwt_required()
-    def get(self, name):
+    def get(self, name: str) -> Union[Dict, Tuple]:
         try:
             store = Store.get_by_name(name)
             if not store:
@@ -21,7 +22,7 @@ class ItemStore(Resource):
         except Exception:
             return {'error': 'Internal server error'}, 500
 
-    def post(self, name):
+    def post(self, name: str) -> Tuple:
         try:
             store = Store.get_by_name(name)
             if store:
@@ -32,7 +33,7 @@ class ItemStore(Resource):
         except Exception:
             return {'error': 'Internal server error'}, 500
 
-    def delete(self, name):
+    def delete(self, name: str) -> Union[Dict, Tuple]:
         try:
             store = Store.get_by_name(name)
             if not store:
@@ -51,7 +52,7 @@ class StoreList(Resource):
     """
 
     @jwt_required()
-    def get(self):
+    def get(self) -> Union[Dict, Tuple]:
         try:
             return {'stores': [store.as_json() for store in Store.query.all()]}
         except Exception:

@@ -1,3 +1,4 @@
+from typing import Dict, Tuple
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 
@@ -24,10 +25,10 @@ class APIUser(Resource):
         help='This field is required')
 
     @jwt_required()
-    def get(self):
+    def get(self) -> Dict:
         return [user.as_json() for user in User.query.all()]
 
-    def post(self):
+    def post(self) -> Tuple:
         data = self._parser.parse_args()
         username = data['username']
         password = data['password']

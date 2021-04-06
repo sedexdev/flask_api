@@ -1,3 +1,4 @@
+from typing import Dict
 from db.db import db
 
 
@@ -13,21 +14,21 @@ class Store(db.Model):
         self.name = name
 
     @classmethod
-    def get_by_name(cls, name):
+    def get_by_name(cls, name: str) -> Dict:
         return Store.query.filter_by(name=name).first()
 
-    def error(self, msg, code):
+    def error(self, msg: str, code: int) -> Dict:
         return {'error': msg}, code
 
-    def as_json(self):
+    def as_json(self) -> Dict:
         return {
             'name': self.name,
             'items': [item.as_json() for item in self.items.all()]}
 
-    def save(self):
+    def save(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete(self):
+    def delete(self) -> None:
         db.session.delete(self)
         db.session.commit()

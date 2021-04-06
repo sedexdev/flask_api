@@ -1,3 +1,4 @@
+from typing import Dict, Tuple, Union
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 
@@ -26,7 +27,7 @@ class StoredItem(Resource):
     )
 
     @jwt_required()
-    def get(self, name):
+    def get(self, name: str) -> Union[Dict, Tuple]:
         try:
             item = Item.get_by_name(name)
             if item:
@@ -35,7 +36,7 @@ class StoredItem(Resource):
         except Exception:
             return {"error": "Internal server error"}, 500
 
-    def post(self, name):
+    def post(self, name: str) -> Tuple:
         data = self._parser.parse_args()
         if Item.get_by_name(name):
             return {'error': 'Item already exists'}, 404
@@ -46,7 +47,7 @@ class StoredItem(Resource):
         except Exception:
             return {"error": "Internal server error"}, 500
 
-    def put(self, name):
+    def put(self, name: str) -> Union[Dict, Tuple]:
         data = self._parser.parse_args()
         try:
             item = Item.get_by_name(name)
@@ -61,7 +62,7 @@ class StoredItem(Resource):
         except Exception:
             return {"error": "Internal server error"}, 500
 
-    def delete(self, name):
+    def delete(self, name: str) -> Union[Dict, Tuple]:
         item = Item.get_by_name(name)
         if not item:
             return {'error': 'Item not found'}, 404
@@ -80,8 +81,8 @@ class ItemList(Resource):
     """
 
     @jwt_required()
-    def get(self):
+    def get(self) -> Union[Dict, Tuple]:
         try:
-            return [item.as_json() for item in Item.query.all()]
+            return {'items': [item.as_json() for item in Item.query.all()]}
         except Exception:
             return {"error": "Internal server error"}, 500

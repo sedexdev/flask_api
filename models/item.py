@@ -1,3 +1,4 @@
+from typing import Dict
 from db.db import db
 
 
@@ -15,25 +16,25 @@ class Item(db.Model):
     store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
     store = db.relationship('Store')
 
-    def __init__(self, name, price, store_id):
+    def __init__(self, name: str, price: float, store_id: int) -> None:
         self.name = name
         self.price = price
         self.store_id = store_id
 
     @classmethod
-    def get_by_name(cls, name):
+    def get_by_name(cls, name: str) -> Dict:
         return cls.query.filter_by(name=name).first()
 
-    def as_json(self):
+    def as_json(self) -> Dict:
         return {'name': self.name, 'price': self.price}
 
-    def get_all(self):
+    def get_all(self) -> Dict:
         return {'items': [self.as_json() for item in Item.query.all()]}
 
-    def save(self):
+    def save(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete(self):
+    def delete(self) -> None:
         db.session.delete(self)
         db.session.commit()

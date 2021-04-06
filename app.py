@@ -23,7 +23,7 @@ jwt = JWT(app, authenticate, identify)
 
 
 @app.before_first_request
-def create_tables():
+def create_tables() -> None:
     # runs CREATE TABLE IF NOT EXISTS ...
     db.create_all()
 

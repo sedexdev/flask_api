@@ -1,3 +1,4 @@
+from typing import Dict
 from werkzeug.security import generate_password_hash
 from db.db import db
 
@@ -18,27 +19,27 @@ class User(db.Model):
         self.password_hash = generate_password_hash(password)
 
     @classmethod
-    def get_by_username(cls, username):
+    def get_by_username(cls, username: str) -> Dict:
         return User.query.filter_by(username=username).first()
 
     @classmethod
-    def get_by_id(cls, _id):
+    def get_by_id(cls, _id: int) -> Dict:
         return User.query.filter_by(id=_id).first()
 
-    def verify_username(self, username):
+    def verify_username(self, username: str) -> bool:
         user = self.get_by_username(username)
         if user:
             return False
         return True
 
-    def verify_password(self, password):
+    def verify_password(self, password: str) -> bool:
         length = len(password) >= 12
         upper = any(x.isupper() for x in password)
         lower = any(x.islower() for x in password)
         digit = any(x.isdigit() for x in password)
         return length and upper and lower and digit
 
-    def password_error(self):
+    def password_error(self) -> Dict:
         return {'error': {
             'msg': 'Password does not meet criteria',
             'length': 'Must be at least 12 characters',
@@ -47,9 +48,9 @@ class User(db.Model):
             'digit': 'Must contain numbers',
         }}, 400
 
-    def as_json(self):
+    def as_json(self) -> Dict:
         return {'username': self.username, 'password_hash': self.password_hash}
 
-    def save(self):
+    def save(self) -> None:
         db.session.add(self)
         db.session.commit()
