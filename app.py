@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
-from decouple import Config, RepositoryEnv
 import os
 
 from security import authenticate, identify
@@ -10,14 +9,10 @@ from resources.item import StoredItem, ItemList
 from resources.store import ItemStore, StoreList
 from db.db import db
 
-HOME = os.path.expanduser(path='~')
-DOTENV_FILE = f'{HOME}/Documents/Flask_REST_APIs/3_sqlalchemy_api/vars.env'
-env_config = Config(RepositoryEnv(DOTENV_FILE))
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = env_config.get('JWT_SECRET_KEY')
+app.secret_key = os.environ['JWT_SECRET_KEY']
 api = Api(app)
 jwt = JWT(app, authenticate, identify)
 
