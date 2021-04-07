@@ -10,8 +10,7 @@ from resources.store import ItemStore, StoreList
 from db.db import db
 
 app = Flask(__name__)
-postgres_url = os.environ.get('DATABASE_URL').replace('://', 'ql://', 1)
-db_url = os.environ.get(postgres_url, 'sqlite:///db/data.db')
+db_url = os.environ.get('DATABASE_URI', 'sqlite:///db/data.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.environ['JWT_SECRET_KEY']
