@@ -18,7 +18,8 @@ jwt = JWT(app, authenticate, identify)
 
 
 @app.before_first_request
-def create_tables() -> None:
+def init_db() -> None:
+    db.init_app(app)
     # runs CREATE TABLE IF NOT EXISTS ...
     db.create_all()
 
@@ -30,5 +31,4 @@ api.add_resource(ItemStore, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
 
 if __name__ == "__main__":
-    db.init_app(app)
     app.run(port=5000)
